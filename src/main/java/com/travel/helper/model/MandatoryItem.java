@@ -24,4 +24,12 @@ public class MandatoryItem {
     public void setCount(Integer count) {
         this.count = count;
     }
+
+    @Override
+    public String toString() {
+        return "MandatoryItem{" +
+                "type=" + type +
+                ", count=" + count +
+                '}';
+    }
 }

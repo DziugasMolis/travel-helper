@@ -19,20 +19,19 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public TravelResult getTravelHelperResult(Double length, Integer travellers, LocalDate startDate) {
         int daysCount = (int) Math.ceil(length / PER_DAY);
-        LocalDate endDate = startDate.plusDays(daysCount);
+        LocalDate endDate = startDate.plusDays(daysCount - 1);
         List<MandatoryItem> mandatoryItemList = getMandatoryItems(daysCount, travellers, startDate, endDate);
         return new TravelResult(daysCount, endDate, mandatoryItemList);
     }
 
     private List<MandatoryItem> getMandatoryItems(int daysCount, Integer travellers, LocalDate startDate, LocalDate endDate) {
-        List<MandatoryItem> mandatoryItemList = new ArrayList<>(Arrays.asList(new MandatoryItem(MandatoryItemType.MUG, travellers), new MandatoryItem(MandatoryItemType.POT, travellers), new MandatoryItem(MandatoryItemType.MRE, daysCount), new MandatoryItem(MandatoryItemType.LIGHTER, travellers), new MandatoryItem(MandatoryItemType.WATER_BOTTLE, travellers)));
+        List<MandatoryItem> mandatoryItemList = new ArrayList<>(Arrays.asList(new MandatoryItem(MandatoryItemType.MUG, travellers), new MandatoryItem(MandatoryItemType.POT, travellers), new MandatoryItem(MandatoryItemType.MRE, daysCount * travellers), new MandatoryItem(MandatoryItemType.LIGHTER, travellers), new MandatoryItem(MandatoryItemType.WATER_BOTTLE, travellers)));
 
         if (daysCount > 1) {
             mandatoryItemList.add(new MandatoryItem(MandatoryItemType.TENT, travellers));
             mandatoryItemList.add(new MandatoryItem(MandatoryItemType.WATER_FILTERING_KIT, travellers));
+            mandatoryItemList.addAll(getSeasonalMandatoryItems(travellers, startDate, endDate));
         }
-
-        mandatoryItemList.addAll(getSeasonalMandatoryItems(travellers, startDate, endDate));
         return mandatoryItemList;
     }
 
